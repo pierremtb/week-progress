@@ -23,9 +23,10 @@ export class ProgressPage extends React.Component<any, any> {
       calendar: DEFAULT_CALENDAR,
       calendars: [DEFAULT_CALENDAR],
     };
-    this.signUpdate = this.signUpdate.bind(this);
     ApiCalendar.onLoad(() => {
-      ApiCalendar.listenSign(this.signUpdate);
+      ApiCalendar.listenSign((sign: boolean) => {
+        this.setState({ sign });
+      });
     });
   }
 
@@ -86,15 +87,15 @@ export class ProgressPage extends React.Component<any, any> {
     }
   }
 
-  public signUpdate(sign: boolean): any {
-    console.log(sign);
-    this.setState({
-      sign
-    })
-  }
-
-  signIn() {
-    ApiCalendar.handleAuthClick();
+  async signIn() {
+    try {
+      await ApiCalendar.handleAuthClick();
+      await this.fetchCalendars();
+      this.setState({ sign: true });
+    } catch (e) {
+      console.log(e);
+      this.setState({ sign: false });
+    }
   }
 
   setPreviousWeek() {
@@ -143,12 +144,12 @@ export class ProgressPage extends React.Component<any, any> {
             <p>Week: {startOfWeek(this.state.baseDate).toLocaleDateString("en-us")}</p>
             <p>Done this week: {this.state.loading ? "-" : this.state.doneThisWeek / 60} hours</p>
             <p>Planned this week: {this.state.loading ? "-" : this.state.plannedThisWeek / 60} hours</p>
-            <Button variant="contained" onClick={() => this.setPreviousWeek()}>Previous</Button>
-            <Button variant="contained" onClick={() => this.setCurrentWeek()}>Current</Button>
-            <Button variant="contained" onClick={() => this.setNextWeek()}>Next</Button>
+            <Button onClick={() => this.setPreviousWeek()}>Previous</Button>
+            <Button onClick={() => this.setCurrentWeek()}>Current</Button>
+            <Button onClick={() => this.setNextWeek()}>Next</Button>
           </div>
           :
-          <Button variant="contained" onClick={this.signIn}>
+          <Button variant="contained" onClick={() => this.signIn()}>
             Sign in with Google</Button>
         }
       </Box>
