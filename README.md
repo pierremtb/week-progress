@@ -1,6 +1,6 @@
 # Week Progress
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Deployed version only accessible to a list of testers.
 
 ## License
 
