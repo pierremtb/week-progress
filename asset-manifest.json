@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/week-progress/static/css/main.e821f4e5.chunk.css",
+    "main.js": "/week-progress/static/js/main.bff44c54.chunk.js",
+    "main.js.map": "/week-progress/static/js/main.bff44c54.chunk.js.map",
+    "runtime-main.js": "/week-progress/static/js/runtime-main.85bd53c5.js",
+    "runtime-main.js.map": "/week-progress/static/js/runtime-main.85bd53c5.js.map",
+    "static/js/2.e1ce3303.chunk.js": "/week-progress/static/js/2.e1ce3303.chunk.js",
+    "static/js/2.e1ce3303.chunk.js.map": "/week-progress/static/js/2.e1ce3303.chunk.js.map",
+    "static/js/3.5a0fe3f7.chunk.js": "/week-progress/static/js/3.5a0fe3f7.chunk.js",
+    "static/js/3.5a0fe3f7.chunk.js.map": "/week-progress/static/js/3.5a0fe3f7.chunk.js.map",
+    "index.html": "/week-progress/index.html",
+    "static/css/main.e821f4e5.chunk.css.map": "/week-progress/static/css/main.e821f4e5.chunk.css.map",
+    "static/js/2.e1ce3303.chunk.js.LICENSE.txt": "/week-progress/static/js/2.e1ce3303.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.85bd53c5.js",
+    "static/js/2.e1ce3303.chunk.js",
+    "static/css/main.e821f4e5.chunk.css",
+    "static/js/main.bff44c54.chunk.js"
+  ]
+}
