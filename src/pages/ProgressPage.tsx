@@ -117,7 +117,9 @@ export class ProgressPage extends React.Component<any, any> {
   }
 
   handleCalendarChange(event: SelectChangeEvent) {
-    this.setState({ calendar: event.target.value })
+    this.setState({ calendar: event.target.value }, () => {
+      this.fetchData();
+    });
   }
 
   render() {
