@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from '@mui/material';
+import { Button, Card, CardActions, CardContent, CardHeader, IconButton, Link, Paper, TextField, Typography } from '@mui/material';
 import ApiCalendar from '../utils/ApiCalendar';
 import { startOfWeek, endOfWeek, differenceInMinutes, subDays, addDays } from 'date-fns'
 import Box from '@mui/material/Box';
@@ -7,6 +7,10 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { DatePicker } from "@mui/lab";
+import { Refresh } from "@mui/icons-material";
 
 const DEFAULT_CALENDAR = "primary";
 
@@ -124,36 +128,73 @@ export class ProgressPage extends React.Component<any, any> {
 
   render() {
     return (
-      <Box padding={4}>
+      <Box sx={{ width: '100%', maxWidth: 500, margin: 'auto', padding: 4 }}>
+        <Typography variant="h3" component="div" gutterBottom>
+          Week Progress
+        </Typography>
         {this.state.sign ?
           <div>
-            <Box sx={{ minWidth: 120 }}>
+            <Box sx={{ minWidth: 120, marginBottom: 2 }}>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Calendar</InputLabel>
+                <InputLabel id="demo-simple-select-label">Pick the calendar</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={this.state.calendar}
-                  label="Calendar"
+                  label="Pick the calendar"
                   onChange={(event) => this.handleCalendarChange(event)}
                 >
                   {this.state.calendars.map((c: gapi.client.calendar.Calendar) =>
                     <MenuItem value={c.id}>{c.summary}</MenuItem>
                   )}
                 </Select>
+                <Box marginBottom={2}></Box>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="Pick any date"
+                    value={this.state.baseDate}
+                    onChange={(date: any) => {
+                      this.setState({ baseDate: new Date(date) });
+                    }}
+                    renderInput={(params: any) => <TextField {...params} />}
+                  />
+                </LocalizationProvider>
+
               </FormControl>
             </Box>
-            <p>Week: {startOfWeek(this.state.baseDate).toLocaleDateString("en-us")}</p>
-            <p>Done this week: {this.state.loading ? "-" : this.state.doneThisWeek / 60} hours</p>
-            <p>Planned this week: {this.state.loading ? "-" : this.state.plannedThisWeek / 60} hours</p>
-            <Button onClick={() => this.setPreviousWeek()}>Previous</Button>
-            <Button onClick={() => this.setCurrentWeek()}>Current</Button>
-            <Button onClick={() => this.setNextWeek()}>Next</Button>
+            <Card>
+              <CardHeader
+                action={
+                  <IconButton aria-label="settings" onClick={() => this.fetchData()}>
+                    <Refresh />
+                  </IconButton>
+                }
+                title="Timesheet"
+                subheader={"Week starting on " + startOfWeek(this.state.baseDate).toLocaleDateString("en-us")}
+              />
+              <CardContent>
+                <Typography variant="body2">
+                  Planned this week: {this.state.loading ? "-" : this.state.plannedThisWeek / 60} hours
+                  <br />
+                  So far: {this.state.loading ? "-" : this.state.doneThisWeek / 60} hours
+                </Typography>
+              </CardContent>
+              <CardActions>
+              <Button onClick={() => this.setPreviousWeek()}>Previous</Button>
+              <Button onClick={() => this.setCurrentWeek()}>Current</Button>
+              <Button onClick={() => this.setNextWeek()}>Next</Button>
+              </CardActions>
+            </Card>
           </div>
           :
           <Button variant="contained" onClick={() => this.signIn()}>
             Sign in with Google</Button>
         }
+        <Typography variant="caption" component="div" paddingTop={4} gutterBottom>
+          Hosted (code + bundle) on <Link href="https://github.com/pierremtb/week-progress">GitHub</Link> 💛. 
+          <br />
+          Copyright © 2021 <Link href="https://pierrejacquier.com">Pierre Jacquier</Link>.
+        </Typography>
       </Box>
     );
   }
