@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Card, CardActions, CardContent, CardHeader, IconButton, Link, Paper, TextField, Typography } from '@mui/material';
+import { Button, Link, TextField, Typography } from '@mui/material';
 import ApiCalendar from '../utils/ApiCalendar';
 import { startOfWeek, endOfWeek, differenceInMinutes, subDays, addDays } from 'date-fns'
 import Box from '@mui/material/Box';
@@ -10,7 +10,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { DatePicker } from "@mui/lab";
-import { Refresh } from "@mui/icons-material";
+import { Timesheet } from "../components/Timesheet";
 
 const DEFAULT_CALENDAR = "primary";
 
@@ -162,29 +162,16 @@ export class ProgressPage extends React.Component<any, any> {
 
               </FormControl>
             </Box>
-            <Card>
-              <CardHeader
-                action={
-                  <IconButton aria-label="settings" onClick={() => this.fetchData()}>
-                    <Refresh />
-                  </IconButton>
-                }
-                title="Timesheet"
-                subheader={"Week starting on " + startOfWeek(this.state.baseDate).toLocaleDateString("en-us")}
-              />
-              <CardContent>
-                <Typography variant="body2">
-                  Planned this week: {this.state.loading ? "-" : this.state.plannedThisWeek / 60} hours
-                  <br />
-                  So far: {this.state.loading ? "-" : this.state.doneThisWeek / 60} hours
-                </Typography>
-              </CardContent>
-              <CardActions>
-              <Button onClick={() => this.setPreviousWeek()}>Previous</Button>
-              <Button onClick={() => this.setCurrentWeek()}>Current</Button>
-              <Button onClick={() => this.setNextWeek()}>Next</Button>
-              </CardActions>
-            </Card>
+            <Timesheet
+              loading={this.state.loading}
+              baseDate={startOfWeek(this.state.baseDate)}
+              doneThisWeek={this.state.doneThisWeek}
+              plannedThisWeek={this.state.plannedThisWeek}
+              onRefresh={() => this.fetchData()}
+              onPrevious={() => this.setPreviousWeek()}
+              onCurrent={() => this.setCurrentWeek()}
+              onNext={() => this.setNextWeek()}
+             />
           </div>
           :
           <Button variant="contained" onClick={() => this.signIn()}>
