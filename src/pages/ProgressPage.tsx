@@ -22,6 +22,7 @@ export class ProgressPage extends React.Component<any, any> {
       events: [],
       doneThisWeek: 0,
       plannedThisWeek: 0,
+      perDayTotals: [0, 0, 0, 0, 0, 0],
       baseDate: new Date(),
       loading: true,
       calendar: DEFAULT_CALENDAR,
@@ -71,13 +72,14 @@ export class ProgressPage extends React.Component<any, any> {
       });
       let plannedThisWeek = 0;
       let doneThisWeek = 0;
-      console.log(result.items);
+      const perDayTotals = [0, 0, 0, 0, 0, 0, 0];
       if (result.items) {
         for (const event of result.items) {
           if (event.start && event.end) {
             const start = new Date(event.start?.dateTime!);
             const end = new Date(event.end?.dateTime!);
             const duration = differenceInMinutes(end, start);
+            perDayTotals[end.getDay()] += duration;
             plannedThisWeek += duration;
             if (end < now) {
               doneThisWeek += duration;
@@ -85,7 +87,7 @@ export class ProgressPage extends React.Component<any, any> {
           }
         }
       }
-      this.setState({ plannedThisWeek, doneThisWeek, loading: false });
+      this.setState({ plannedThisWeek, doneThisWeek, perDayTotals, loading: false });
     } catch (e) {
       console.error(e);
     }
@@ -167,6 +169,7 @@ export class ProgressPage extends React.Component<any, any> {
               baseDate={startOfWeek(this.state.baseDate)}
               doneThisWeek={this.state.doneThisWeek}
               plannedThisWeek={this.state.plannedThisWeek}
+              perDayTotals={this.state.perDayTotals}
               onRefresh={() => this.fetchData()}
               onPrevious={() => this.setPreviousWeek()}
               onCurrent={() => this.setCurrentWeek()}
