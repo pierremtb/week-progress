@@ -12,9 +12,21 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { DatePicker } from "@mui/lab";
 import { Timesheet } from "../components/Timesheet";
 
-const DEFAULT_CALENDAR = "primary";
+type ProgressPageProps = {};
 
-export class ProgressPage extends React.Component<any, any> {
+type ProgressPageState = {
+  sign: boolean;
+  events: gapi.client.calendar.Event[];
+  doneThisWeek: number;
+  plannedThisWeek: number;
+  perDayTotals: number[];
+  baseDate: Date;
+  loading: boolean;
+  calendar?: string;
+  calendars?: gapi.client.calendar.CalendarListEntry[];
+};
+
+export class ProgressPage extends React.Component<ProgressPageProps, ProgressPageState> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -25,8 +37,8 @@ export class ProgressPage extends React.Component<any, any> {
       perDayTotals: [0, 0, 0, 0, 0, 0],
       baseDate: new Date(),
       loading: true,
-      calendar: DEFAULT_CALENDAR,
-      calendars: [DEFAULT_CALENDAR],
+      calendar: undefined,
+      calendars: [],
     };
     ApiCalendar.onLoad(() => {
       ApiCalendar.listenSign((sign: boolean) => {
@@ -146,7 +158,7 @@ export class ProgressPage extends React.Component<any, any> {
                   label="Pick the calendar"
                   onChange={(event) => this.handleCalendarChange(event)}
                 >
-                  {this.state.calendars.map((c: gapi.client.calendar.Calendar) =>
+                  {this.state.calendars?.map((c: gapi.client.calendar.Calendar) =>
                     <MenuItem value={c.id}>{c.summary}</MenuItem>
                   )}
                 </Select>
@@ -164,24 +176,26 @@ export class ProgressPage extends React.Component<any, any> {
 
               </FormControl>
             </Box>
-            <Timesheet
-              loading={this.state.loading}
-              baseDate={startOfWeek(this.state.baseDate)}
-              doneThisWeek={this.state.doneThisWeek}
-              plannedThisWeek={this.state.plannedThisWeek}
-              perDayTotals={this.state.perDayTotals}
-              onRefresh={() => this.fetchData()}
-              onPrevious={() => this.setPreviousWeek()}
-              onCurrent={() => this.setCurrentWeek()}
-              onNext={() => this.setNextWeek()}
-             />
+            {this.state.calendar &&
+              <Timesheet
+                loading={this.state.loading}
+                baseDate={startOfWeek(this.state.baseDate)}
+                doneThisWeek={this.state.doneThisWeek}
+                plannedThisWeek={this.state.plannedThisWeek}
+                perDayTotals={this.state.perDayTotals}
+                onRefresh={() => this.fetchData()}
+                onPrevious={() => this.setPreviousWeek()}
+                onCurrent={() => this.setCurrentWeek()}
+                onNext={() => this.setNextWeek()}
+              />
+            }
           </div>
           :
           <Button variant="contained" onClick={() => this.signIn()}>
             Sign in with Google</Button>
         }
         <Typography variant="caption" component="div" paddingTop={4} gutterBottom>
-          Hosted (code + bundle) on <Link href="https://github.com/pierremtb/week-progress">GitHub</Link> 💛. 
+          Hosted (code + bundle) on <Link href="https://github.com/pierremtb/week-progress">GitHub</Link> 💛.
           <br />
           Copyright © 2021 <Link href="https://pierrejacquier.com">Pierre Jacquier</Link>.
         </Typography>
