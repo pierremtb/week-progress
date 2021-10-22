@@ -78,7 +78,7 @@ export class ProgressPage extends React.Component<ProgressPageProps, ProgressPag
         timeMin: startOfWeek(this.state.baseDate).toISOString(),
         timeMax: endOfWeek(this.state.baseDate).toISOString(),
         showDeleted: false,
-        maxResults: 10,
+        maxResults: 50,
         calendarId: this.state.calendar,
         singleEvents: true,
       });
